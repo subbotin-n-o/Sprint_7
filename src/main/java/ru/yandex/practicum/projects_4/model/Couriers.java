@@ -10,4 +10,6 @@ public class Couriers {
 
     private int id;
     private String ordersCount;
+    private String message;
+
 }
