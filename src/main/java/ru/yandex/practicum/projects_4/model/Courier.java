@@ -12,6 +12,15 @@ public class Courier {
     private String password;
     private String firstName;
     private String id;
-    private String message;
+
+    @Override
+    public String toString() {
+        return "Courier{" +
+                "login" + login + '\'' +
+                ",password ='" + password + '\'' +
+                ",firstName ='" + firstName + '\'' +
+                ",id ='" + id + '\'' +
+                "}";
+    }
 
 }
