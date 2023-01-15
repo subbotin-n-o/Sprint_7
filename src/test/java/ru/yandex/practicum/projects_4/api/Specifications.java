@@ -5,19 +5,12 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
-import org.junit.BeforeClass;
-import ru.yandex.practicum.projects_4.model.Courier;
 
 import java.io.IOException;
-import java.util.Random;
-import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
+public class Specifications {
 
-public class BaseTest {
-
-    @BeforeClass
-    public static void prepare() {
+    public static void requestSpec() {
         // загрузить в системные переменные "base.uri" из "config.properties"
         try {
             System.getProperties().load(ClassLoader.getSystemResourceAsStream("config.properties"));
@@ -41,31 +34,30 @@ public class BaseTest {
         RestAssured.filters(new ResponseLoggingFilter());
     }
 
-    protected Courier buildNewCourier() {
-        Courier courier = new Courier();
-        String login = "Courier_" + UUID.randomUUID();
-        String password = String.valueOf(new Random().nextInt(1000));
-        String firstName = "Courier_" + UUID.randomUUID();
 
-        courier.setLogin(login);
-        courier.setPassword(password);
-        courier.setFirstName(firstName);
-        return courier;
-    }
-
-//    protected Courier createCourier(Courier courier) {
-//        // отправить HTTP запрос для создания курьера
-//
-//        return given()
-//                .body(courier)
-//                .when()
-//                .post("/api/v1/courier")
-//                .then()
-//                .assertThat()
-//                .statusCode(201)
-//                .extract()
-//                .body()
-//                .as(Courier.class);
+//    public static RequestSpecification requestSpec(String baseUrl) {
+//        return new RequestSpecBuilder()
+//                .setBaseUri(baseUrl)
+//                .setAccept(ContentType.JSON)
+//                .setContentType(ContentType.JSON)
+//                .log(LogDetail.ALL)
+//                .build();
 //    }
 
+//    public static ResponseSpecification responseSpecOk200() {
+//        return new ResponseSpecBuilder()
+//                .expectStatusCode(200)
+//                .build();
+//    }
+//
+//    public static ResponseSpecification responseSpecOk201() {
+//        return new ResponseSpecBuilder()
+//                .expectStatusCode(201)
+//                .build();
+//    }
+//
+//    public static void installSpecification(RequestSpecification request, ResponseSpecification response) {
+//        RestAssured.requestSpecification = request;
+//        RestAssured.responseSpecification = response;
+//    }
 }

@@ -1,40 +1,94 @@
 package ru.yandex.practicum.projects_4.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.junit.Before;
 import org.junit.Test;
-import ru.yandex.practicum.projects_4.model.Courier;
-
+import ru.yandex.practicum.projects_4.model.CreateCourier;
+import ru.yandex.practicum.projects_4.model.SuccessLoginCourier;
 
 import static io.restassured.RestAssured.given;
 
-public class CreateCourierTest extends BaseTest {
+public class CreateCourierTest extends GenerateCourier {
+
+    @Before
+    public void installSpecification() {
+        Specifications.requestSpec();
+    }
 
     @Test
-    public void createCourierReturnsSuccess() {
-        Courier randomCourier = buildNewCourier();
+    public void successCreateCourierTest() {
+        CreateCourier newRandomCourier = buildNewRandomCourier();
 
         given()
-                .body(randomCourier)
+                .body(newRandomCourier)
+                .when()
                 .post("/api/v1/courier")
                 .then()
-                .extract()
-                .as(Courier.class);
+                .assertThat().statusCode(201);
 
-        String json = given()
-                .body(randomCourier)
+        SuccessLoginCourier successLoginNewCourier = given()
+                .body(newRandomCourier)
+                .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .extract()
-                .asString();
-
-        Courier idCourier = new Gson().fromJson(json, Courier.class);
+                .extract().as(SuccessLoginCourier.class);
 
         given()
                 .when()
-                .delete("/api/v1/courier/" + idCourier.getId())
+                .delete("/api/v1/courier/" + successLoginNewCourier.getId())
+                .then();
+    }
+
+    @Test
+    public void createDuplicateCourierTest() {
+        CreateCourier newRandomCourier = buildNewRandomCourier();
+
+        given()
+                .body(newRandomCourier)
+                .when()
+                .post("/api/v1/courier");
+
+        given()
+                .body(newRandomCourier)
+                .when()
+                .post("/api/v1/courier")
                 .then()
-                .statusCode(200);
+                .assertThat().statusCode(409);
+
+        SuccessLoginCourier successLoginNewCourier = given()
+                .body(newRandomCourier)
+                .when()
+                .post("/api/v1/courier/login")
+                .then()
+                .extract().as(SuccessLoginCourier.class);
+
+        given()
+                .when()
+                .delete("/api/v1/courier/" + successLoginNewCourier.getId())
+                .then();
+    }
+
+    @Test
+    public void createNoLoginCourierTest() {
+        CreateCourier newNoLoginCourier = buildNewNoLoginRandomCourier();
+
+        given()
+                .body(newNoLoginCourier)
+                .when()
+                .post("/api/v1/courier")
+                .then()
+                .assertThat().statusCode(400);
+    }
+
+    @Test
+    public void createNoPasswordCourierTest() {
+        CreateCourier newNoPasswordCourier = buildNewNoPasswordRandomCourier();
+
+        given()
+                .body(newNoPasswordCourier)
+                .when()
+                .post("/api/v1/courier")
+                .then()
+                .assertThat().statusCode(400);
     }
 
 }
