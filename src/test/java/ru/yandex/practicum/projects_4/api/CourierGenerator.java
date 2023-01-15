@@ -7,14 +7,6 @@ import java.util.UUID;
 
 public class CourierGenerator {
 
-    public CreateCourier buildNewCourier(String login, String password, String firstName) {
-        CreateCourier courier = new CreateCourier();
-        courier.setLogin(login);
-        courier.setPassword(password);
-        courier.setFirstName(firstName);
-        return courier;
-    }
-
     public CreateCourier buildNewRandomCourier() {
         CreateCourier courier = new CreateCourier();
         String login = "Courier_" + UUID.randomUUID();
