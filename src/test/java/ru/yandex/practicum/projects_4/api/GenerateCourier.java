@@ -1,6 +1,6 @@
 package ru.yandex.practicum.projects_4.api;
 
-import ru.yandex.practicum.projects_4.model.CreateCourier;
+import ru.yandex.practicum.projects_4.model.courier.CreateCourier;
 
 import java.util.Random;
 import java.util.UUID;
