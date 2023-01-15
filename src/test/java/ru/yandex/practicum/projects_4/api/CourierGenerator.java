@@ -1,11 +1,11 @@
 package ru.yandex.practicum.projects_4.api;
 
-import ru.yandex.practicum.projects_4.model.courier.CreateCourier;
+import ru.yandex.practicum.projects_4.model.courier.requests.CreateCourier;
 
 import java.util.Random;
 import java.util.UUID;
 
-public class GenerateCourier {
+public class CourierGenerator {
 
     public CreateCourier buildNewCourier(String login, String password, String firstName) {
         CreateCourier courier = new CreateCourier();

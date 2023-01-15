@@ -1,4 +1,4 @@
-package ru.yandex.practicum.projects_4.model.courier;
+package ru.yandex.practicum.projects_4.model.courier.succcesResponses;
 
 import lombok.*;
 

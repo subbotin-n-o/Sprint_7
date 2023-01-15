@@ -1,4 +1,4 @@
-package ru.yandex.practicum.projects_4.model.courier;
+package ru.yandex.practicum.projects_4.model.courier.requests;
 
 import lombok.*;
 
@@ -6,8 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCourier {
+public class LoginCourier {
     private String login;
     private String password;
-    private String firstName;
 }

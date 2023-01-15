@@ -2,13 +2,16 @@ package ru.yandex.practicum.projects_4.api;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.yandex.practicum.projects_4.model.courier.*;
+import ru.yandex.practicum.projects_4.model.courier.requests.CreateCourier;
+import ru.yandex.practicum.projects_4.model.courier.succcesResponses.SuccessCreateCourier;
+import ru.yandex.practicum.projects_4.model.courier.succcesResponses.SuccessLoginCourier;
+import ru.yandex.practicum.projects_4.model.courier.unSucccesResponses.UnSuccessCreateOrLogin;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CreateCourierTest extends GenerateCourier {
+public class CreateCourierTest extends CourierGenerator {
 
     @Before
     public void installSpecification() {
@@ -19,7 +22,7 @@ public class CreateCourierTest extends GenerateCourier {
     public void successCreateCourierTest() {
         CreateCourier newRandomCourier = buildNewRandomCourier();
 
-        SuccessCreateCourier newCourier = given()
+        SuccessCreateCourier newCourierResponse = given()
                 .body(newRandomCourier)
                 .when()
                 .post("/api/v1/courier")
@@ -28,10 +31,10 @@ public class CreateCourierTest extends GenerateCourier {
                 .statusCode(201)
                 .extract().as(SuccessCreateCourier.class);
 
-        boolean actualResponse = newCourier.getOk();
-        assertTrue(actualResponse);
+        boolean actualOk = newCourierResponse.getOk();
+        assertTrue(actualOk);
 
-        SuccessLoginCourier successLoginNewCourier = given()
+        SuccessLoginCourier loginCourierResponse = given()
                 .body(newRandomCourier)
                 .when()
                 .post("/api/v1/courier/login")
@@ -40,8 +43,7 @@ public class CreateCourierTest extends GenerateCourier {
 
         given()
                 .when()
-                .delete("/api/v1/courier/" + successLoginNewCourier.getId())
-                .then();
+                .delete("/api/v1/courier/" + loginCourierResponse.getId());
     }
 
     @Test
@@ -53,21 +55,21 @@ public class CreateCourierTest extends GenerateCourier {
                 .when()
                 .post("/api/v1/courier");
 
-        UnSuccessCreateDuplicateCourier duplicateCourier = given()
+        UnSuccessCreateOrLogin duplicateCourierResponse = given()
                 .body(newRandomCourier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
                 .assertThat()
                 .statusCode(409)
-                .extract().as(UnSuccessCreateDuplicateCourier.class);
+                .extract().as(UnSuccessCreateOrLogin.class);
 
-        String expectedMessage = "Этот логин уже используется. Попробуйте другой.";
-        String actualMessage = duplicateCourier.getMessage();
+        String expectedMessage = "Этот логин уже используется";
+        String actualMessage = duplicateCourierResponse.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
-        SuccessLoginCourier successLoginNewCourier = given()
+        SuccessLoginCourier loginCourierResponse = given()
                 .body(newRandomCourier)
                 .when()
                 .post("/api/v1/courier/login")
@@ -76,25 +78,24 @@ public class CreateCourierTest extends GenerateCourier {
 
         given()
                 .when()
-                .delete("/api/v1/courier/" + successLoginNewCourier.getId())
-                .then();
+                .delete("/api/v1/courier/" + loginCourierResponse.getId());
     }
 
     @Test
     public void createNoLoginCourierTest() {
         CreateCourier newNoLoginCourier = buildNewNoLoginRandomCourier();
 
-        UnSuccessCreateCourierNoLoginOrNoPassword noLoginCourier = given()
+        UnSuccessCreateOrLogin noLoginCourierResponse = given()
                 .body(newNoLoginCourier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
                 .assertThat()
                 .statusCode(400)
-                .extract().as(UnSuccessCreateCourierNoLoginOrNoPassword.class);
+                .extract().as(UnSuccessCreateOrLogin.class);
 
         String expectedMessage = "Недостаточно данных для создания учетной записи";
-        String actualMessage = noLoginCourier.getMessage();
+        String actualMessage = noLoginCourierResponse.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -103,17 +104,17 @@ public class CreateCourierTest extends GenerateCourier {
     public void createNoPasswordCourierTest() {
         CreateCourier newNoPasswordCourier = buildNewNoPasswordRandomCourier();
 
-        UnSuccessCreateCourierNoLoginOrNoPassword noPasswordCourier = given()
+        UnSuccessCreateOrLogin noPasswordCourierResponse = given()
                 .body(newNoPasswordCourier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
                 .assertThat()
                 .statusCode(400)
-                .extract().as(UnSuccessCreateCourierNoLoginOrNoPassword.class);
+                .extract().as(UnSuccessCreateOrLogin.class);
 
         String expectedMessage = "Недостаточно данных для создания учетной записи";
-        String actualMessage = noPasswordCourier.getMessage();
+        String actualMessage = noPasswordCourierResponse.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
