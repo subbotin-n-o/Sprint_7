@@ -1,4 +1,4 @@
-package ru.yandex.practicum.projects_4.model.courier;
+package ru.yandex.practicum.projects_4.model;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -13,7 +13,7 @@ public class Client {
     private static final String BASE_URL = "https://qa-scooter.praktikum-services.ru/";
 
     protected RequestSpecification getSpec() {
-        //RestAssured.filters(new ResponseLoggingFilter());
+        RestAssured.filters(new ResponseLoggingFilter());
 
         return new RequestSpecBuilder()
                 .setBaseUri(BASE_URL)

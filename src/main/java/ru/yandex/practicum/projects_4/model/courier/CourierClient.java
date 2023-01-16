@@ -1,6 +1,7 @@
 package ru.yandex.practicum.projects_4.model.courier;
 
 import io.restassured.response.ValidatableResponse;
+import ru.yandex.practicum.projects_4.model.Client;
 
 import static io.restassured.RestAssured.given;
 
