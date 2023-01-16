@@ -1,5 +1,7 @@
 package ru.yandex.practicum.projects_4.api;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -37,11 +39,13 @@ public class LoginCourierTest {
     }
 
     @Test
-    public void succesLoginCourierTest() {
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+    @DisplayName("Succes login")
+    @Description("Expected response: StatusCode 200")
+    public void succesLoginTest() {
+        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
 
-        int actualStatusCode = loginResponse.extract().statusCode();
-        int actualId = loginResponse.extract().path("id");
+        int actualStatusCode = response.extract().statusCode();
+        int actualId = response.extract().path("id");
 
         assertEquals(SC_OK, actualStatusCode);
         assertNotNull(actualId);
@@ -49,14 +53,16 @@ public class LoginCourierTest {
     }
 
     @Test
-    public void loginCourierNoLoginTest() {
+    @DisplayName("Check login no login")
+    @Description("Expected response: StatusCode 400")
+    public void loginNoLoginTest() {
         courier.setLogin(null);
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
 
-        int actualStatusCode = loginResponse.extract().statusCode();
-        String actualMessage = loginResponse.extract().path("message");
+        int actualStatusCode = response.extract().statusCode();
+        String actualMessage = response.extract().path("message");
 
         assertEquals(SC_BAD_REQUEST, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
@@ -64,14 +70,16 @@ public class LoginCourierTest {
     }
 
     @Test
-    public void loginCourierNoPasswordTest() {
+    @DisplayName("Check login no password")
+    @Description("Expected response: StatusCode 400")
+    public void loginNoPasswordTest() {
         courier.setPassword("");
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
 
-        int actualStatusCode = loginResponse.extract().statusCode();
-        String actualMessage = loginResponse.extract().path("message");
+        int actualStatusCode = response.extract().statusCode();
+        String actualMessage = response.extract().path("message");
 
         assertEquals(SC_BAD_REQUEST, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
@@ -79,14 +87,16 @@ public class LoginCourierTest {
     }
 
     @Test
-    public void loginCourierNotValidDataTest() {
+    @DisplayName("Check login invalid data")
+    @Description("Expected response: StatusCode 404")
+    public void loginInvalidDataTest() {
         courier = CourierGenerator.getRandomCourier();
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Учетная запись не найдена";
 
-        int actualStatusCode = loginResponse.extract().statusCode();
-        String actualMessage = loginResponse.extract().path("message");
+        int actualStatusCode = response.extract().statusCode();
+        String actualMessage = response.extract().path("message");
 
         assertEquals(SC_NOT_FOUND, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);

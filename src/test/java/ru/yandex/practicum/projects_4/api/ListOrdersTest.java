@@ -1,5 +1,7 @@
 package ru.yandex.practicum.projects_4.api;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 import ru.yandex.practicum.projects_4.model.Client;
@@ -15,6 +17,8 @@ public class ListOrdersTest extends Client {
     private OrderClient orderClient;
 
     @Test
+    @DisplayName("Check list Orders")
+    @Description("Expected response: StatusCode 200")
     public void getListOrders() {
 
         orderClient = new OrderClient();

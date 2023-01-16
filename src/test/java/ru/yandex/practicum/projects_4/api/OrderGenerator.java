@@ -5,7 +5,6 @@ import ru.yandex.practicum.projects_4.model.order.Order;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 public class OrderGenerator {
 
     private static final int PHONE_NUMBER_LENGTH = 10;

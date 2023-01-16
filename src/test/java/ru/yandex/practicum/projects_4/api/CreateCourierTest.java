@@ -1,5 +1,7 @@
 package ru.yandex.practicum.projects_4.api;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +39,9 @@ public class CreateCourierTest {
     }
 
     @Test
-    public void successCreateCourierTest() {
+    @DisplayName("Success create Courier")
+    @Description("Expected response: StatusCode 201")
+    public void SuccesCreateCourierTest() {
         ValidatableResponse response = courierClient.create(courier);
         ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
 
@@ -52,7 +56,9 @@ public class CreateCourierTest {
     }
 
     @Test
-    public void createDuplicateCourierTest() {  //баг в response
+    @DisplayName("Check create duplicate Courier")
+    @Description("Expected response: StatusCode 409")
+    public void createDuplicateCourierTest() {
         ValidatableResponse response = courierClient.create(courier);
         ValidatableResponse duplicateResponse = courierClient.create(courier);
 
@@ -70,6 +76,8 @@ public class CreateCourierTest {
     }
 
     @Test
+    @DisplayName("Check create Courier no login")
+    @Description("Expected response: StatusCode 400")
     public void createCourierNoLoginTest() {
         courier.setLogin("");
 
@@ -86,6 +94,8 @@ public class CreateCourierTest {
     }
 
     @Test
+    @DisplayName("Check create Courier no password")
+    @Description("Expected response: StatusCode 400")
     public void createCourierNoPasswordTest() {
         courier.setPassword(null);
 

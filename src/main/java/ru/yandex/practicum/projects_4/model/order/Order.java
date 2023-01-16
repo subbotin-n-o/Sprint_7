@@ -1,6 +1,5 @@
 package ru.yandex.practicum.projects_4.model.order;
 
-
 import lombok.*;
 
 import java.util.List;
