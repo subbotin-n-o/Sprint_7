@@ -6,8 +6,7 @@ import ru.yandex.practicum.projects_4.model.Client;
 import static io.restassured.RestAssured.given;
 
 public class OrderClient extends Client {
-    private static final String PATH_CREATE = "api/v1/orders";
-    private static final String PATH_CANCEL = "api/v1/orders/cancel";
+    private static final String PATH = "api/v1/orders";
 
 
     public ValidatableResponse create(Order order) {
@@ -15,7 +14,14 @@ public class OrderClient extends Client {
                 .spec(getSpec())
                 .body(order)
                 .when()
-                .post(PATH_CREATE)
+                .post(PATH)
+                .then();
+    }
+
+    public ValidatableResponse getListOrders() {
+        return given()
+                .spec(getSpec())
+                .get(PATH)
                 .then();
     }
 
