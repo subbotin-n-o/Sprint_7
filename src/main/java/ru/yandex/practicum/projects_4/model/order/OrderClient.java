@@ -19,12 +19,4 @@ public class OrderClient extends Client {
                 .then();
     }
 
-    public ValidatableResponse cancel(OrderCreateResponse response) {
-        return given()
-                .spec(getSpec())
-                .body(response)
-                .when()
-                .put(PATH_CANCEL)
-                .then();
-    }
 }
