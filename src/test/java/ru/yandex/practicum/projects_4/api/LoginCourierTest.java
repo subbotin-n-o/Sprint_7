@@ -1,126 +1,96 @@
 package ru.yandex.practicum.projects_4.api;
 
+import io.restassured.response.ValidatableResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.yandex.practicum.projects_4.model.courier.requests.CreateCourier;
-import ru.yandex.practicum.projects_4.model.courier.succcesResponses.SuccessLoginCourier;
-import ru.yandex.practicum.projects_4.model.courier.unSucccesResponses.UnSuccessCreateOrLogin;
+import ru.yandex.practicum.projects_4.model.courier.Courier;
+import ru.yandex.practicum.projects_4.model.courier.CourierClient;
+import ru.yandex.practicum.projects_4.model.courier.CourierCredentials;
 
-import java.util.UUID;
+import static org.apache.http.HttpStatus.*;
+import static org.junit.Assert.*;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class LoginCourierTest extends CourierGenerator {
+public class LoginCourierTest {
+    private Courier courier;
+    private CourierClient courierClient;
+    private int id;
 
     @Before
-    public void installSpecification() {
-        Specifications.requestSpec();
+    public void setUp() {
+        courier = CourierGenerator.getRandomCourier();
+        courierClient = new CourierClient();
+
+        courierClient.create(courier);
+
+    }
+
+    @After
+    public void cleanUp() {
+        if (id != 0) {
+            ValidatableResponse deleteResponse = courierClient.delete(id);
+
+            assertEquals(SC_OK, deleteResponse.extract().statusCode());
+            assertTrue(deleteResponse.extract().path("ok"));
+
+        }
     }
 
     @Test
     public void succesLoginCourierTest() {
-        CreateCourier newRandomCourier = buildNewRandomCourier();
+        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
 
-        given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier");
+        int actualStatusCode = loginResponse.extract().statusCode();
+        int actualId = loginResponse.extract().path("id");
 
-        SuccessLoginCourier loginCourierResponse = given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .extract().as(SuccessLoginCourier.class);
-
-        assertNotNull(loginCourierResponse.getId());
-
-        given()
-                .when()
-                .delete("/api/v1/courier/" + loginCourierResponse.getId());
+        assertEquals(SC_OK, actualStatusCode);
+        assertNotNull(actualId);
 
     }
 
     @Test
     public void loginCourierNoLoginTest() {
-        CreateCourier newRandomCourier = buildNewRandomCourier();
-
-        given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier");
-
-        newRandomCourier.setLogin("");
-
-        UnSuccessCreateOrLogin noLoginResponse = given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
-                .assertThat()
-                .statusCode(400)
-                .extract().as(UnSuccessCreateOrLogin.class);
+        courier.setLogin(null);
+        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
-        String actualMessage = noLoginResponse.getMessage();
 
+        int actualStatusCode = loginResponse.extract().statusCode();
+        String actualMessage = loginResponse.extract().path("message");
+
+        assertEquals(SC_BAD_REQUEST, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
+
     }
 
     @Test
     public void loginCourierNoPasswordTest() {
-        CreateCourier newRandomCourier = buildNewRandomCourier();
-
-        given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier");
-
-        newRandomCourier.setPassword("");
-
-        UnSuccessCreateOrLogin noPasswordResponse = given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
-                .assertThat()
-                .statusCode(400)
-                .extract().as(UnSuccessCreateOrLogin.class);
+        courier.setPassword("");
+        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
-        String actualMessage = noPasswordResponse.getMessage();
 
+        int actualStatusCode = loginResponse.extract().statusCode();
+        String actualMessage = loginResponse.extract().path("message");
+
+        assertEquals(SC_BAD_REQUEST, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
 
     }
 
     @Test
     public void loginCourierNotValidDataTest() {
-        CreateCourier newRandomCourier = buildNewRandomCourier();
-
-        given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier");
-
-        newRandomCourier.setLogin("Courier_" + UUID.randomUUID());
-
-        UnSuccessCreateOrLogin noValidDataResponse = given()
-                .body(newRandomCourier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
-                .assertThat()
-                .statusCode(404)
-                .extract().as(UnSuccessCreateOrLogin.class);
+        courier = CourierGenerator.getRandomCourier();
+        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
 
         String expectedMessage = "Учетная запись не найдена";
-        String actualMessage = noValidDataResponse.getMessage();
 
+        int actualStatusCode = loginResponse.extract().statusCode();
+        String actualMessage = loginResponse.extract().path("message");
+
+        assertEquals(SC_NOT_FOUND, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
+
     }
+
 }
