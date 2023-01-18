@@ -11,7 +11,7 @@ public class CourierClient extends Client {
     private static final String PATH_LOGIN = "api/v1/courier/login";
     private static final String PATH_DELETE = "api/v1/courier/";
 
-    public ValidatableResponse create(Courier courier) {
+    public ValidatableResponse createCourier(Courier courier) {
         return given()
                 .spec(getSpec())
                 .body(courier)
@@ -20,7 +20,7 @@ public class CourierClient extends Client {
                 .then();
     }
 
-    public ValidatableResponse login(CourierCredentials credentials) {
+    public ValidatableResponse loginCourier(CourierCredentials credentials) {
         return given()
                 .spec(getSpec())
                 .body(credentials)
@@ -29,7 +29,7 @@ public class CourierClient extends Client {
                 .then();
     }
 
-    public ValidatableResponse delete(Integer id) {
+    public ValidatableResponse deleteCourier(Integer id) {
         return given()
                 .spec(getSpec())
                 .delete(PATH_DELETE + id)

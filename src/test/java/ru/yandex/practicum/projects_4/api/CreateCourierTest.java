@@ -30,7 +30,7 @@ public class CreateCourierTest {
     @After
     public void cleanUp() {
         if (id != 0) {
-            ValidatableResponse deleteResponse = courierClient.delete(id);
+            ValidatableResponse deleteResponse = courierClient.deleteCourier(id);
 
             assertEquals(SC_OK, deleteResponse.extract().statusCode());
             assertTrue(deleteResponse.extract().path("ok"));
@@ -41,9 +41,9 @@ public class CreateCourierTest {
     @Test
     @DisplayName("Success create Courier")
     @Description("Expected response: StatusCode 201")
-    public void SuccesCreateCourierTest() {
-        ValidatableResponse response = courierClient.create(courier);
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+    public void succesCreateCourierTest() {
+        ValidatableResponse response = courierClient.createCourier(courier);
+        ValidatableResponse loginResponse = courierClient.loginCourier(CourierCredentials.from(courier));
 
         id = loginResponse.extract().path("id");
 
@@ -59,8 +59,8 @@ public class CreateCourierTest {
     @DisplayName("Check create duplicate Courier")
     @Description("Expected response: StatusCode 409")
     public void createDuplicateCourierTest() {
-        ValidatableResponse response = courierClient.create(courier);
-        ValidatableResponse duplicateResponse = courierClient.create(courier);
+        ValidatableResponse response = courierClient.createCourier(courier);
+        ValidatableResponse duplicateResponse = courierClient.createCourier(courier);
 
         String expectedMessage = "Этот логин уже используется";
         String actualMessage = duplicateResponse.extract().path("message");
@@ -70,7 +70,7 @@ public class CreateCourierTest {
         assertEquals(SC_CONFLICT, actualStatusCode);
         assertEquals(expectedMessage, actualMessage);
 
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse loginResponse = courierClient.loginCourier(CourierCredentials.from(courier));
         id = loginResponse.extract().path("id");
 
     }
@@ -81,7 +81,7 @@ public class CreateCourierTest {
     public void createCourierNoLoginTest() {
         courier.setLogin("");
 
-        ValidatableResponse response = courierClient.create(courier);
+        ValidatableResponse response = courierClient.createCourier(courier);
 
         String expectedMessage = "Недостаточно данных для создания учетной записи";
 
@@ -99,7 +99,7 @@ public class CreateCourierTest {
     public void createCourierNoPasswordTest() {
         courier.setPassword(null);
 
-        ValidatableResponse response = courierClient.create(courier);
+        ValidatableResponse response = courierClient.createCourier(courier);
 
         String expectedMessage = "Недостаточно данных для создания учетной записи";
 

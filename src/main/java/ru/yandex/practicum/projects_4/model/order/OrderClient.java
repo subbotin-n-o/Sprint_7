@@ -9,7 +9,7 @@ public class OrderClient extends Client {
     private static final String PATH = "api/v1/orders";
 
 
-    public ValidatableResponse create(Order order) {
+    public ValidatableResponse createOrder(Order order) {
         return given()
                 .spec(getSpec())
                 .body(order)

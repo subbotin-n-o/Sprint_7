@@ -23,14 +23,14 @@ public class LoginCourierTest {
         courier = CourierGenerator.getRandomCourier();
         courierClient = new CourierClient();
 
-        courierClient.create(courier);
+        courierClient.createCourier(courier);
 
     }
 
     @After
     public void cleanUp() {
         if (id != 0) {
-            ValidatableResponse deleteResponse = courierClient.delete(id);
+            ValidatableResponse deleteResponse = courierClient.deleteCourier(id);
 
             assertEquals(SC_OK, deleteResponse.extract().statusCode());
             assertTrue(deleteResponse.extract().path("ok"));
@@ -42,7 +42,7 @@ public class LoginCourierTest {
     @DisplayName("Succes login")
     @Description("Expected response: StatusCode 200")
     public void succesLoginTest() {
-        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.loginCourier(CourierCredentials.from(courier));
 
         int actualStatusCode = response.extract().statusCode();
         int actualId = response.extract().path("id");
@@ -57,7 +57,7 @@ public class LoginCourierTest {
     @Description("Expected response: StatusCode 400")
     public void loginNoLoginTest() {
         courier.setLogin(null);
-        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.loginCourier(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
 
@@ -74,7 +74,7 @@ public class LoginCourierTest {
     @Description("Expected response: StatusCode 400")
     public void loginNoPasswordTest() {
         courier.setPassword("");
-        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.loginCourier(CourierCredentials.from(courier));
 
         String expectedMessage = "Недостаточно данных для входа";
 
@@ -91,7 +91,7 @@ public class LoginCourierTest {
     @Description("Expected response: StatusCode 404")
     public void loginInvalidDataTest() {
         courier = CourierGenerator.getRandomCourier();
-        ValidatableResponse response = courierClient.login(CourierCredentials.from(courier));
+        ValidatableResponse response = courierClient.loginCourier(CourierCredentials.from(courier));
 
         String expectedMessage = "Учетная запись не найдена";
 

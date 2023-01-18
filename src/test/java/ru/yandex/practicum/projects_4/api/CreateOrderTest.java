@@ -38,7 +38,7 @@ public class CreateOrderTest {
     @Description("Expected response: StatusCode 201")
     public void createOrderTest() {
 
-        ValidatableResponse response = orderClient.create(order);
+        ValidatableResponse response = orderClient.createOrder(order);
 
         int actualStatusCode = response.extract().statusCode();
         int actualTrack = response.extract().path("track");
