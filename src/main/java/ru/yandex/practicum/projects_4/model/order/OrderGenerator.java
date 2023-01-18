@@ -1,6 +1,4 @@
-package ru.yandex.practicum.projects_4.api;
-
-import ru.yandex.practicum.projects_4.model.order.Order;
+package ru.yandex.practicum.projects_4.model.order;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

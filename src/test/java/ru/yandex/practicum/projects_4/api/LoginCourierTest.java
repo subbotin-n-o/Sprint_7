@@ -9,6 +9,7 @@ import org.junit.Test;
 import ru.yandex.practicum.projects_4.model.courier.Courier;
 import ru.yandex.practicum.projects_4.model.courier.CourierClient;
 import ru.yandex.practicum.projects_4.model.courier.CourierCredentials;
+import ru.yandex.practicum.projects_4.model.courier.CourierGenerator;
 
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;

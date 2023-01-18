@@ -1,6 +1,4 @@
-package ru.yandex.practicum.projects_4.api;
-
-import ru.yandex.practicum.projects_4.model.courier.Courier;
+package ru.yandex.practicum.projects_4.model.courier;
 
 import java.util.UUID;
 
