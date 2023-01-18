@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.yandex.practicum.projects_4.model.order.Order;
 import ru.yandex.practicum.projects_4.model.order.OrderClient;
+import ru.yandex.practicum.projects_4.model.order.OrderGenerator;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
